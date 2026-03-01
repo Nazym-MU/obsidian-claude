@@ -1,0 +1,17 @@
+# Environment / secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
+
+# Node (not used, but just in case)
+node_modules/
+package-lock.json
+
+# Backups
+*.bak
