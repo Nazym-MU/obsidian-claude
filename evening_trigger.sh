@@ -4,7 +4,7 @@
 # 
 # To install this cron job, run:
 #   crontab -e
-# Then add this line:
-#   0 22 * * * /Users/nazymzhiyengaliyeva/obsidian-mcp/evening_trigger.sh
+# Then add this line (replace with the actual path to this script):
+#   0 22 * * * /path/to/obsidian-mcp/evening_trigger.sh
 
 osascript -e 'display notification "Time for your evening reflection. Open Claude Desktop and say: run my evening reflection" with title "Obsidian 🌙" sound name "Chime"'
