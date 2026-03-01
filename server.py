@@ -12,7 +12,7 @@ import os
 import re
 import sys
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
@@ -180,6 +180,11 @@ def fs_daily_append(content: str) -> str:
 @app.list_tools()
 async def list_tools() -> list[Tool]:
     return [
+        Tool(
+            name="get_current_time",
+            description="Get the current date, time, day of week, and hours remaining in the day. Always call this first when generating a daily note or doing any time-aware planning.",
+            inputSchema={"type": "object", "properties": {}}
+        ),
         Tool(
             name="vault_search",
             description="Search the entire Obsidian vault for any text query. Uses Obsidian's live search index.",
@@ -373,7 +378,19 @@ async def list_tools() -> list[Tool]:
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
   try:
     log(f"Tool called: {name}")
-    if name == "vault_search":
+    if name == "get_current_time":
+        now = datetime.now()
+        midnight = now.replace(hour=0, minute=0, second=0) + timedelta(days=1)
+        hours_left = (midnight - now).total_seconds() / 3600
+        result = (
+            f"Date: {now.strftime('%Y-%m-%d')}\n"
+            f"Time: {now.strftime('%I:%M %p')}\n"
+            f"Day: {now.strftime('%A')}\n"
+            f"Hours remaining today: {hours_left:.1f}"
+        )
+        return [TextContent(type="text", text=result)]
+
+    elif name == "vault_search":
         result = fs_search(
             arguments["query"],
             arguments.get("folder"),
